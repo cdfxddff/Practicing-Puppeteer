@@ -5,6 +5,7 @@ const url='https://dictionary.goo.ne.jp/jn/';
 
 (async ()=>{
     const browser= await puppeteer.launch({
+        headless:true,
         args: [
             '--disable-gpu',
             '--disable-dev-shm-usage',
@@ -12,13 +13,15 @@ const url='https://dictionary.goo.ne.jp/jn/';
             '--no-first-run',
             '--no-sandbox',
             '--no-zygote',
-            '--single-process'
+            '--single-process',
+            "--proxy-server='direct://'",
+            "--proxy-bypass-list=*"
           ]
         });
     const page = await browser.newPage();
    
     await page.goto(url);
-    await page.type('#searchtop',"  走る");
+    await page.type('#searchtop',"走る");
     //テキストフォームに入力↑
 
     //~で始まるをクリック　ナビゲーションを出す
