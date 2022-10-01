@@ -21,20 +21,33 @@ const puppeteer=require('puppeteer');
     const aop = await page.$('#search-unit > div.menu > p > a');
     await aop.click();
 
-    //～で一致するをクリックナビゲーションを設定
+    //～で一致するをクリック　ナビゲーションを設定
     const a = await page.$('#search-unit > div.menu > ul > li:nth-child(2) > a');
     await Promise.all([
         page.waitForNavigation({waitUntil:['load','networkidle2']}),
         a.click()
     ]);
-    //
+    //検索ボタンをクリック
     const btn = await page.$('#freeword1 > div.bk_search_btn > input');
     await Promise.all([
         page.waitForNavigation({waitUntil:['load','networkidle2']}),
         btn.click()
     ]);
-    
-    await page.screenshot({path:'screen_shot.png'})
+    //要素を取得
+    const eletopi = await page.$('#NR-main-in > section > div > div.basic_title.nolink');
+    const elecont = await page.$$('#NR-main-in > section > div > div.example_sentence > ul > li');
+    //データを抽出
+    const valtopi = await (await eletopi.getProperty('textContent')).jsonValue();
+    let valcont=[];
+    for(let i=0;i<elecont.length;i++){
+        valcont[i] = await (await elecont[0].getProperty('textContent')).jsonValue();
+        valcont[i].trim();
+    }
+    //データを整形
+    console.log(valtopi.replace('で一致する言葉','').trim());
+    console.log(valcont);
+
+    //await page.screenshot({path:'screen_shot.png'})
     
     await browser.close();
 })();
