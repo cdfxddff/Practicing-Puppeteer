@@ -1,4 +1,7 @@
+const { request } = require('express');
 const puppeteer=require('puppeteer');
+
+const url='https://dictionary.goo.ne.jp/jn/';
 
 (async ()=>{
     const browser= await puppeteer.launch({
@@ -13,8 +16,9 @@ const puppeteer=require('puppeteer');
           ]
         });
     const page = await browser.newPage();
-    await page.goto('https://dictionary.goo.ne.jp/jn/');
-    await page.type('#searchtop',"成功");
+   
+    await page.goto(url);
+    await page.type('#searchtop',"  走る");
     //テキストフォームに入力↑
 
     //~で始まるをクリック　ナビゲーションを出す
@@ -35,13 +39,13 @@ const puppeteer=require('puppeteer');
     ]);
     //要素を取得
     const eletopi = await page.$('#NR-main-in > section > div > div.basic_title.nolink');
-    const elecont = await page.$$('#NR-main-in > section > div > div.example_sentence > ul > li');
+    const elecont = await page.$$('#NR-main-in > section > div > div.example_sentence > ul > li:nth-child(2) > a > p.text');
     //データを抽出
     const valtopi = await (await eletopi.getProperty('textContent')).jsonValue();
     let valcont=[];
     for(let i=0;i<elecont.length;i++){
-        valcont[i] = await (await elecont[0].getProperty('textContent')).jsonValue();
-        valcont[i].trim();
+        valcont[i] = await (await elecont[i].getProperty('textContent')).jsonValue();
+        valcont[i].replaceAll(/\s+/g,'');
     }
     //データを整形
     console.log(valtopi.replace('で一致する言葉','').trim());
