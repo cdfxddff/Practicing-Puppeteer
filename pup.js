@@ -4,9 +4,7 @@ const puppeteer=require('puppeteer');
     const browser= await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto('http://localhost:3000');
-    let sel = await page.$('h1');
-    let value = await (await sel.getProperty('textContent')).jsonValue();
-    console.log(value);
-
+    await page.type('input',"おはようございます");
+    await page.screenshot({path:'type_result.png'});
     await browser.close();
 })();
