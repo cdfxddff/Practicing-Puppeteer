@@ -21,6 +21,7 @@ const url='https://dictionary.goo.ne.jp/jn/';
     const page = await browser.newPage();
    
     await page.goto(url);
+    await page.setDefaultNavigationTimeout(0); 
     await page.type('#searchtop',"走る");
     //テキストフォームに入力↑
 
@@ -42,7 +43,7 @@ const url='https://dictionary.goo.ne.jp/jn/';
     ]);
     //要素を取得
     const eletopi = await page.$('#NR-main-in > section > div > div.basic_title.nolink');
-    const elecont = await page.$$('#NR-main-in > section > div > div.example_sentence > ul > li:nth-child(2) > a > p.text');
+    const elecont = await page.$$('p.text');
     //データを抽出
     const valtopi = await (await eletopi.getProperty('textContent')).jsonValue();
     let valcont=[];
@@ -52,7 +53,9 @@ const url='https://dictionary.goo.ne.jp/jn/';
     }
     //データを整形
     console.log(valtopi.replace('で一致する言葉','').trim());
-    console.log(valcont);
+    for(let i of valcont){
+        console.log(i);
+    }
 
     //await page.screenshot({path:'screen_shot.png'})
     
